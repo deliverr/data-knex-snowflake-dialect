@@ -1,0 +1,34 @@
+{
+  "name": "knex-snowflake-dialect",
+  "version": "0.1.0",
+  "description": "knex.js dialect for the Snowflake data warehouse",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deliverr/knex-snowflake-dialect.git"
+  },
+  "author": "Emmet Murphy",
+  "keywords": [
+    "knex",
+    "snowflake"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deliverr/knex-snowflake-dialect/issues"
+  },
+  "homepage": "https://github.com/deliverr/knex-snowflake-dialect#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "lodash": "^4.17.15",
+    "snowflake-sdk": "^1.5.0"
+  },
+  "peerDependencies": {
+    "knex": "^0.15.2"
+  }
+}
