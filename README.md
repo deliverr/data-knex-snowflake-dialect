@@ -1,7 +1,7 @@
 # knex-snowflake-dialect
 knex.js dialect for the Snowflake data warehouse.
 
-As of release 0.1.0, only the `connect` and `raw` query methods have been tested.
+As of release 0.1.x, only the `connect` and `raw` query methods have been tested.
 
 ## Installation
 
@@ -27,3 +27,7 @@ export const Snowflake = knex({
   }
 });
 ```
+
+The configuration could alternatively break out the `connection` parameters as separate keys, per the 
+[snowflake-sdk "Establishing a Connection"](https://docs.snowflake.net/manuals/user-guide/nodejs-driver-use.html#establishing-a-connection)
+documentation.
