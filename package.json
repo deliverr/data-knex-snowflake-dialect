@@ -3,12 +3,14 @@
   "version": "0.1.7",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
-  "type": "module",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "clean": "rm -rf lib/",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
@@ -26,13 +28,18 @@
   "homepage": "https://github.com/deliverr/knex-snowflake-dialect#readme",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "lodash": "^4.17.15",
-    "snowflake-sdk": "^1.5.0"
+    "lodash": "^4.17.15"
   },
   "peerDependencies": {
-    "knex": "0.15.2"
+    "knex": "0.15.2",
+    "snowflake-sdk": "1.5.0"
   },
   "devDependencies": {
-    "knex": "0.15.2"
+    "@types/bluebird": "3.5.29",
+    "@types/lodash": "4.14.149",
+    "@types/node": "13.7.0",
+    "knex": "0.15.2",
+    "snowflake-sdk": "1.5.0",
+    "typescript": "3.7.5"
   }
 }
