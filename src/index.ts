@@ -61,8 +61,8 @@ export class SnowflakeDialect extends Client {
   **/
 
   _driver() {
-    const { Snowflake } = require("snowflake-sdk");
-    return new Snowflake();
+    const Snowflake = require("snowflake-sdk");
+    return Snowflake;
   }
 
   validateConnection(connection: any) {
