@@ -40,7 +40,8 @@ export class SnowflakeDialect extends Client {
   }
 
   queryCompiler() {
-    return new QueryCompiler(super.client, super.builder);
+    // @ts-ignore
+    return new QueryCompiler(this.client, this.builder);
   }
 
   columnBuilder() {
@@ -70,7 +71,8 @@ export class SnowflakeDialect extends Client {
   // connection needs to be added to the pool.
   acquireRawConnection() {
     return new Bluebird((resolver, rejecter) => {
-      const connection = super.driver.createConnection(super.connectionSettings);
+      // @ts-ignore
+      const connection = this.driver.createConnection(this.connectionSettings);
       connection.on('error', (err) => {
         connection.__knex__disposed = err;
       });

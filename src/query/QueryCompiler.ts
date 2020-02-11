@@ -7,12 +7,14 @@ export class QueryCompiler extends QueryCompiler_MySQL {
   }
 
   forUpdate() {
-    super.client.logger.warn('table lock is not supported by snowflake dialect');
+    // @ts-ignore
+    this.client.logger.warn('table lock is not supported by snowflake dialect');
     return '';
   }
 
   forShare() {
-    super.client.logger.warn(
+    // @ts-ignore
+    this.client.logger.warn(
       'lock for share is not supported by snowflake dialect'
     );
     return '';

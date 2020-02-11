@@ -5,12 +5,14 @@ export class SnowflakeColumnBuilder extends ColumnBuilder {
 
   // primary needs to set not null on non-preexisting columns, or fail
   primary() {
-    super.notNullable();
+    // @ts-ignore
+    this.notNullable();
     return super.primary();
   }
 
   index() {
-    super.client.logger.warn(
+    // @ts-ignore
+    this.client.logger.warn(
       'Snowflake does not support the creation of indexes.'
     );
     return this;
