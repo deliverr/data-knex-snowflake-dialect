@@ -3,6 +3,7 @@
   "version": "0.1.12",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "directories": {
     "lib": "lib"
   },
@@ -10,7 +11,7 @@
     "build": "tsc",
     "clean": "rm -rf lib/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm version patch && npm publish"
+    "deploy": "npm version patch && npm publish --declaration"
   },
   "repository": {
     "type": "git",

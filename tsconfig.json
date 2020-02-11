@@ -5,6 +5,7 @@
     "lib": [ "es2017" ],
     "moduleResolution": "node",
     "outDir": "lib",
+    "declaration": true,
     "sourceMap": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
