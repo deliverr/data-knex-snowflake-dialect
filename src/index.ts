@@ -1,11 +1,12 @@
 import * as Bluebird from "bluebird";
 // @ts-ignore
 import * as Client from "knex/lib/client";
-import { map } from "lodash";
+import { defer, map } from "lodash";
 
 import { SnowflakeTransaction } from "./Transaction";
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
+import { promisify } from "util";
 
 export class SnowflakeDialect extends Client {
   constructor(config = {} as any) {
@@ -63,6 +64,39 @@ export class SnowflakeDialect extends Client {
   _driver() {
     const Snowflake = require("snowflake-sdk");
     return Snowflake;
+  }
+
+  // Get a raw connection, called by the `pool` whenever a new
+  // connection needs to be added to the pool.
+  acquireRawConnection() {
+    return new Bluebird((resolver, rejecter) => {
+      const connection = super.driver.createConnection(super.connectionSettings);
+      connection.on('error', (err) => {
+        connection.__knex__disposed = err;
+      });
+      connection.connect((err) => {
+        if (err) {
+          // if connection is rejected, remove listener that was registered above...
+          connection.removeAllListeners();
+          return rejecter(err);
+        }
+        resolver(connection);
+      });
+    });
+  }
+
+  // Used to explicitly close a connection, called internally by the pool
+  // when a connection times out or the pool is shutdown.
+  async destroyRawConnection(connection) {
+    try {
+      const end = promisify((cb) => connection.end(cb));
+      return await end();
+    } catch (err) {
+      connection.__knex__disposed = err;
+    } finally {
+      // see discussion https://github.com/knex/knex/pull/3483
+      defer(() => connection.removeAllListeners());
+    }
   }
 
   validateConnection(connection: any) {
