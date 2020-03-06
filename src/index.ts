@@ -138,7 +138,7 @@ export class SnowflakeDialect extends Client {
     const resp = obj.response;
     if (obj.output) return obj.output.call(runner, resp);
     if (obj.method === 'raw') return resp;
-    if (resp.command === 'SELECT') {
+    if (resp.command === 'SELECT' || (resp.statement && resp.rows)) {
       if (obj.method === 'first') return resp.rows[0];
       if (obj.method === 'pluck') return map(resp.rows, obj.pluck);
       return resp.rows;
