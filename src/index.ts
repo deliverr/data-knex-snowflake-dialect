@@ -41,7 +41,7 @@ export class SnowflakeDialect extends Client {
 
   queryCompiler(builder: any) {
     // @ts-ignore
-    return new QueryCompiler(this.client, builder);
+    return new QueryCompiler(builder.client, builder);
   }
 
   columnBuilder() {
