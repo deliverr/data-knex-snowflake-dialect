@@ -8,7 +8,7 @@ export declare class SnowflakeDialect extends Client {
     get dialect(): string;
     get driverName(): string;
     transaction(): SnowflakeTransaction;
-    queryCompiler(): QueryCompiler;
+    queryCompiler(builder: any): QueryCompiler;
     columnBuilder(): SnowflakeColumnBuilder;
     /** The following will likely be needed, but have not yet been implemented
     columnCompiler() {
