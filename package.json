@@ -1,6 +1,6 @@
 {
   "name": "knex-snowflake-dialect",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
