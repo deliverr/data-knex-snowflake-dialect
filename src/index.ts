@@ -5,6 +5,7 @@ import { defer, map } from "lodash";
 
 import { SnowflakeTransaction } from "./Transaction";
 import { QueryCompiler } from "./query/QueryCompiler";
+import { ColumnCompiler, SchemaCompiler, TableCompiler } from "./schema";
 import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
 import { promisify } from "util";
 
@@ -48,19 +49,17 @@ export class SnowflakeDialect extends Client {
     return new SnowflakeColumnBuilder();
   }
 
-  /** The following will likely be needed, but have not yet been implemented
-  columnCompiler() {
-    return new ColumnCompiler(this, ...arguments);
-  },
+  columnCompiler(builder: any) {
+    return new ColumnCompiler(this, builder);
+  }
 
-  tableCompiler() {
-    return new TableCompiler(this, ...arguments);
-  },
+  tableCompiler(builder: any) {
+    return new TableCompiler(this, builder);
+  }
 
-  schemaCompiler() {
-    return new SchemaCompiler(this, ...arguments);
-  },
-  **/
+  schemaCompiler(builder: any) {
+    return new SchemaCompiler(this, builder);
+  }
 
   _driver() {
     const Snowflake = require("snowflake-sdk");

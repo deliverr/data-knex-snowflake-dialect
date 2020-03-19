@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@types/bluebird": "3.5.29",
+    "@types/knex": "0.15.2",
     "@types/lodash": "4.14.149",
     "@types/node": "13.7.0",
     "knex": "0.15.2",
