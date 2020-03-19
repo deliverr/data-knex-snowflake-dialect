@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as Transaction from "knex/lib/transaction";
 export declare class SnowflakeTransaction extends Transaction {
     savepoint(conn: any): void;
