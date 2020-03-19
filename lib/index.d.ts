@@ -1,4 +1,5 @@
 import * as Bluebird from "bluebird";
+// @ts-ignore
 import * as Client from "knex/lib/client";
 import { SnowflakeTransaction } from "./Transaction";
 import { QueryCompiler } from "./query/QueryCompiler";
