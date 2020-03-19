@@ -3,6 +3,10 @@ import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
 
 export class SnowflakeColumnBuilder extends ColumnBuilder {
 
+  constructor(client: any, tableBuilder: any, type: any, args: any) {
+    super(client, tableBuilder, type, args);
+  }
+
   // primary needs to set not null on non-preexisting columns, or fail
   primary() {
     // @ts-ignore

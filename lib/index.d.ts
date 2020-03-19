@@ -7,15 +7,13 @@ import { ColumnCompiler, SchemaCompiler, TableCompiler } from "./schema";
 import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
 export declare class SnowflakeDialect extends Client {
     constructor(config?: any);
-    // @ts-ignore
     get dialect(): string;
-    // @ts-ignore
     get driverName(): string;
     transaction(): SnowflakeTransaction;
     queryCompiler(builder: any): QueryCompiler;
-    columnBuilder(): SnowflakeColumnBuilder;
-    columnCompiler(builder: any): ColumnCompiler;
-    tableCompiler(builder: any): TableCompiler;
+    columnBuilder(tableBuilder: any, type: any, args: any): SnowflakeColumnBuilder;
+    columnCompiler(tableBuilder: any, columnBuilder: any): ColumnCompiler;
+    tableCompiler(tableBuilder: any): TableCompiler;
     schemaCompiler(builder: any): SchemaCompiler;
     _driver(): any;
     acquireRawConnection(): Bluebird<unknown>;

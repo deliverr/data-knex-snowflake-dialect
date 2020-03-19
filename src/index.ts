@@ -45,16 +45,16 @@ export class SnowflakeDialect extends Client {
     return new QueryCompiler(this, builder);
   }
 
-  columnBuilder() {
-    return new SnowflakeColumnBuilder();
+  columnBuilder(tableBuilder: any, type: any, args: any) {
+    return new SnowflakeColumnBuilder(this, tableBuilder, type, args);
   }
 
-  columnCompiler(builder: any) {
-    return new ColumnCompiler(this, builder);
+  columnCompiler(tableBuilder: any, columnBuilder: any) {
+    return new ColumnCompiler(this, tableBuilder, columnBuilder);
   }
 
-  tableCompiler(builder: any) {
-    return new TableCompiler(this, builder);
+  tableCompiler(tableBuilder: any) {
+    return new TableCompiler(this, tableBuilder);
   }
 
   schemaCompiler(builder: any) {
