@@ -7,7 +7,9 @@ import { ColumnCompiler, SchemaCompiler, TableCompiler } from "./schema";
 import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
 export declare class SnowflakeDialect extends Client {
     constructor(config?: any);
+    // @ts-ignore
     get dialect(): string;
+    // @ts-ignore
     get driverName(): string;
     transaction(): SnowflakeTransaction;
     queryCompiler(builder: any): QueryCompiler;
