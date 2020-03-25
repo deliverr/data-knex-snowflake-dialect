@@ -164,10 +164,7 @@ export class SnowflakeDialect extends Knex.Client {
   // Ensures the response is returned in the same format as other clients.
   processResponse(obj: any, runner: any) {
     const resp = obj.response;
-    if (obj.output) {
-      const ret = obj.output.call(runner, resp);
-      return ret;
-    }
+    if (obj.output) return obj.output.call(runner, resp);
     if (obj.method === 'raw') return resp;
     if (resp.command === 'SELECT' || (resp.statement && resp.rows)) {
       if (obj.method === 'first') return resp.rows[0];

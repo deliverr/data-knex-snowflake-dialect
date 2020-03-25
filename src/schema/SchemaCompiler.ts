@@ -23,9 +23,7 @@ export class SchemaCompiler extends SchemaCompiler_MySQL {
     this.pushQuery({
       sql,
       bindings,
-      output: function output(resp) {
-        return Boolean(resp.rows && resp.rows.length > 0);
-      }
+      output: (resp) => resp.rows.length > 0
     });
   }
 
