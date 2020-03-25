@@ -18,7 +18,7 @@ describe('Snowflake_SchemaBuilder', () => {
       });
     equal(1, tableSql.toSQL().length);
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "users" add "id" int unsigned not null auto_increment primary key, add "email" varchar(255)',
+      'alter table "USERS" add "ID" int unsigned not null auto_increment primary key, add "EMAIL" varchar(255)',
     );
   });
 
@@ -29,7 +29,7 @@ describe('Snowflake_SchemaBuilder', () => {
         t.json('preferences');
       });
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "user" add "preferences" variant',
+      'alter table "USER" add "PREFERENCES" variant',
     );
   });
 
@@ -40,7 +40,7 @@ describe('Snowflake_SchemaBuilder', () => {
         t.jsonb('preferences');
       });
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "user" add "preferences" variant',
+      'alter table "USER" add "PREFERENCES" variant',
     );
   });
 
@@ -50,7 +50,7 @@ describe('Snowflake_SchemaBuilder', () => {
       .dropTable('users');
 
     equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('drop table "users"');
+    expect(tableSql.toSQL()[0].sql).toEqual('drop table "USERS"');
   });
 
   it('test drop table if exists', () => {
@@ -59,7 +59,7 @@ describe('Snowflake_SchemaBuilder', () => {
       .dropTableIfExists('users');
 
     equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('drop table if exists "users"');
+    expect(tableSql.toSQL()[0].sql).toEqual('drop table if exists "USERS"');
   });
 
   it('test drop column', () => {
@@ -71,7 +71,7 @@ describe('Snowflake_SchemaBuilder', () => {
       });
 
     equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('alter table "users" drop "foo"');
+    expect(tableSql.toSQL()[0].sql).toEqual('alter table "USERS" drop "FOO"');
   });
 
   it('drops multiple columns with an array', () => {

@@ -6,7 +6,7 @@ export declare class SnowflakeDialect extends Knex.Client {
     constructor(config?: any);
     get dialect(): string;
     get driverName(): string;
-    transaction(): Knex.Transaction;
+    transaction(container: any, config: any, outerTx: any): Knex.Transaction;
     queryCompiler(builder: any): QueryCompiler;
     columnBuilder(tableBuilder: any, type: any, args: any): any;
     tableCompiler(tableBuilder: any): TableCompiler;
@@ -17,5 +17,5 @@ export declare class SnowflakeDialect extends Knex.Client {
     validateConnection(connection: any): Promise<boolean>;
     _query(connection: any, obj: any): Bluebird<unknown>;
     processResponse(obj: any, runner: any): any;
-    wrapIdentifierCustom(value: string, origImpl: any, queryContext: any): any;
+    customWrapIdentifier(value: any, origImpl: any, queryContext: any): any;
 }

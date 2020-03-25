@@ -35,8 +35,8 @@ export class SnowflakeDialect extends Knex.Client {
     return "snowflake-sdk";
   }
 
-  transaction(): Knex.Transaction {
-    const transax = new Transaction();
+  transaction(container: any, config: any, outerTx: any): Knex.Transaction {
+    const transax = new Transaction(this, container, config, outerTx);
     transax.savepoint = (conn: any) => {
       // @ts-ignore
       transax.trxClient.logger('Snowflake does not support savepoints.');
@@ -181,12 +181,12 @@ export class SnowflakeDialect extends Knex.Client {
     return resp;
   }
 
-  wrapIdentifierCustom(value: string, origImpl: any, queryContext: any) {
+  customWrapIdentifier(value, origImpl, queryContext) {
     if (this.config.wrapIdentifier) {
       return this.config.wrapIdentifier(value, origImpl, queryContext);
     }
     else if (!value.startsWith('"')) {
-      return `"${value.toUpperCase()}"`;
+      return origImpl(value.toUpperCase());
     }
     return origImpl;
   }

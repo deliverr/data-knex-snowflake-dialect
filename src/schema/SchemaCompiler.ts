@@ -10,11 +10,11 @@ export class SchemaCompiler extends SchemaCompiler_MySQL {
   hasTable(tableName: string) {
     const [ schema, table ] = tableName.includes(".") ? tableName.split(".") : [undefined, tableName];
     let sql = 'select * from information_schema.tables where table_name = ?';
-    const bindings = [tableName];
+    const bindings = [table.toUpperCase()];
 
     if (schema) {
       sql += ' and table_schema = ?';
-      bindings.push(schema);
+      bindings.push(schema.toUpperCase());
     } else {
       sql += ' and table_schema = current_schema()';
     }
