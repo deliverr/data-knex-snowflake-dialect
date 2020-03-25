@@ -148,10 +148,7 @@ describe('Snowflake_SchemaBuilder', () => {
         this.dropIndex('foo');
       });
 
-    equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "users" drop index "users_foo_index"',
-    );
+    equal(0, tableSql.toSQL().length);
   });
 
   it('test drop index, custom', () => {
@@ -162,8 +159,7 @@ describe('Snowflake_SchemaBuilder', () => {
         this.dropIndex(null, 'foo');
       });
 
-    equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('alter table "users" drop index "foo"');
+    equal(0, tableSql.toSQL().length);
   });
 
   it('test drop foreign', () => {
