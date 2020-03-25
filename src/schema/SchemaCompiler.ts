@@ -24,7 +24,7 @@ export class SchemaCompiler extends SchemaCompiler_MySQL {
       sql,
       bindings,
       output: function output(resp) {
-        return resp.length > 0;
+        return Boolean(resp.rows && resp.rows.length > 0);
       }
     });
   }
