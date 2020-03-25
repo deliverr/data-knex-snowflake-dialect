@@ -181,4 +181,14 @@ export class SnowflakeDialect extends Knex.Client {
     return resp;
   }
 
+  wrapIdentifierCustom(value: string, origImpl: any, queryContext: any) {
+    if (this.config.wrapIdentifier) {
+      return this.config.wrapIdentifier(value, origImpl, queryContext);
+    }
+    else if (!value.startsWith('"')) {
+      return `"${value.toUpperCase()}"`;
+    }
+    return origImpl;
+  }
+
 }
