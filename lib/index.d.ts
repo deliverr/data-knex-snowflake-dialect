@@ -1,26 +1,20 @@
 import * as Bluebird from "bluebird";
-// @ts-ignore
-import * as Client from "knex/lib/client";
-import { SnowflakeTransaction } from "./Transaction";
+import * as Knex from "knex";
 import { QueryCompiler } from "./query/QueryCompiler";
-import { ColumnCompiler, SchemaCompiler, TableCompiler } from "./schema";
-import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
-export declare class SnowflakeDialect extends Client {
+import { SchemaCompiler, TableCompiler } from "./schema";
+export declare class SnowflakeDialect extends Knex.Client {
     constructor(config?: any);
-    // @ts-ignore
     get dialect(): string;
-    // @ts-ignore
     get driverName(): string;
-    transaction(): SnowflakeTransaction;
+    transaction(): Knex.Transaction;
     queryCompiler(builder: any): QueryCompiler;
-    columnBuilder(tableBuilder: any, type: any, args: any): SnowflakeColumnBuilder;
-    columnCompiler(tableBuilder: any, columnBuilder: any): ColumnCompiler;
+    columnBuilder(tableBuilder: any, type: any, args: any): any;
     tableCompiler(tableBuilder: any): TableCompiler;
     schemaCompiler(builder: any): SchemaCompiler;
     _driver(): any;
     acquireRawConnection(): Bluebird<unknown>;
-    destroyRawConnection(connection: any): Promise<unknown>;
-    validateConnection(connection: any): boolean;
+    destroyRawConnection(connection: any): Promise<void>;
+    validateConnection(connection: any): Promise<boolean>;
     _query(connection: any, obj: any): Bluebird<unknown>;
     processResponse(obj: any, runner: any): any;
 }

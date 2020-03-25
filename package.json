@@ -10,8 +10,13 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf lib/",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm version patch && npm publish --declaration"
+    "deploy": "npm version patch && npm publish --declaration",
+    "lint": "tslint --project tsconfig.json 'src/**/*'",
+    "lint-fix": "tslint --fix --project tsconfig.json 'src/**/*'",
+    "test": "npm run lint && jest --runInBand --silent --forceExit --detectOpenHandles",
+    "coverage": "jest --coverage --silent && open coverage/lcov-report/index.html",
+    "prepush": "npm test uspec",
+    "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "repository": {
     "type": "git",
@@ -27,20 +32,45 @@
     "url": "https://github.com/deliverr/knex-snowflake-dialect/issues"
   },
   "homepage": "https://github.com/deliverr/knex-snowflake-dialect#readme",
+  "jest": {
+    "automock": false,
+    "transform": {
+      ".(ts)": "ts-jest"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(\\.(ispec|uspec))\\.(ts)$",
+    "roots": [
+      "<rootDir>/test"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ]
+  },
   "dependencies": {
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
     "snowflake-sdk": "1.5.0"
   },
   "peerDependencies": {
-    "knex": "0.15.2"
+    "knex": "^0.15.2"
   },
   "devDependencies": {
     "@types/bluebird": "3.5.29",
-    "@types/knex": "0.15.2",
+    "@types/jest": "25.1.4",
     "@types/lodash": "4.14.149",
     "@types/node": "13.7.0",
-    "knex": "0.15.2",
+    "jest": "25.1.0",
+    "knex": "0.20.4",
+    "sinon": "9.0.1",
+    "ts-jest": "25.2.1",
+    "tslint": "6.1.0",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-microsoft-contrib": "6.2.0",
     "typescript": "3.7.5"
   }
 }

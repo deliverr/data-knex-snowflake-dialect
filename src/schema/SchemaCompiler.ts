@@ -21,8 +21,8 @@ export class SchemaCompiler extends SchemaCompiler_MySQL {
 
     // @ts-ignore
     this.pushQuery({
-      sql: sql,
-      bindings: bindings,
+      sql,
+      bindings,
       output: function output(resp) {
         return resp.length > 0;
       }

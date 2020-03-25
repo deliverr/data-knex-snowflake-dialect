@@ -1,15 +1,14 @@
 import * as Bluebird from "bluebird";
-// @ts-ignore
-import * as Client from "knex/lib/client";
+import * as Knex from "knex";
 import { defer, map } from "lodash";
 
-import { SnowflakeTransaction } from "./Transaction";
 import { QueryCompiler } from "./query/QueryCompiler";
-import { ColumnCompiler, SchemaCompiler, TableCompiler } from "./schema";
-import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
+import { SchemaCompiler, TableCompiler } from "./schema";
+import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
+import * as Transaction from "knex/lib/transaction";
 import { promisify } from "util";
 
-export class SnowflakeDialect extends Client {
+export class SnowflakeDialect extends Knex.Client {
   constructor(config = {} as any) {
     if (config.connection) {
       if (config.connection.user && !config.connection.username) {
@@ -36,22 +35,52 @@ export class SnowflakeDialect extends Client {
     return "snowflake-sdk";
   }
 
-  transaction() {
-    return new SnowflakeTransaction();
+  transaction(): Knex.Transaction {
+    const transax = new Transaction();
+    transax.savepoint = (conn: any) => {
+      // @ts-ignore
+      transax.trxClient.logger('Snowflake does not support savepoints.');
+    };
+
+    transax.release = (conn: any, value: any) => {
+      // @ts-ignore
+      transax.trxClient.logger('Snowflake does not support savepoints.');
+    };
+
+    transax.rollbackTo = (conn: any, error: any) => {
+      // @ts-ignore
+      this.trxClient.logger('Snowflake does not support savepoints.');
+    };
+    return transax;
   }
 
   queryCompiler(builder: any) {
-    // @ts-ignore
     return new QueryCompiler(this, builder);
   }
 
   columnBuilder(tableBuilder: any, type: any, args: any) {
-    return new SnowflakeColumnBuilder(this, tableBuilder, type, args);
+    // ColumnBuilder methods are created at runtime, so that it does not play well with TypeScript.
+    // So instead of extending ColumnBuilder, we override methods at runtime here
+    const columnBuilder = new ColumnBuilder(this, tableBuilder, type, args);
+    columnBuilder.primary = (constraintName?: string | undefined): Knex.ColumnBuilder => {
+      // @ts-ignore
+      columnBuilder.notNullable();
+      return columnBuilder;
+    };
+    columnBuilder.index = (indexName?: string | undefined): Knex.ColumnBuilder => {
+      // @ts-ignore
+      columnBuilder.client.logger.warn(
+        'Snowflake does not support the creation of indexes.'
+      );
+      return columnBuilder;
+    };
+
+    return columnBuilder;
   }
 
-  columnCompiler(tableBuilder: any, columnBuilder: any) {
-    return new ColumnCompiler(this, tableBuilder, columnBuilder);
-  }
+  /*columnCompiler(tableCompiler: any, columnBuilder: any) {
+    return new ColumnCompiler_MySQL(this, tableCompiler.tableBuilder, columnBuilder);
+  }*/
 
   tableCompiler(tableBuilder: any) {
     return new TableCompiler(this, tableBuilder);
@@ -88,10 +117,10 @@ export class SnowflakeDialect extends Client {
 
   // Used to explicitly close a connection, called internally by the pool
   // when a connection times out or the pool is shutdown.
-  async destroyRawConnection(connection) {
+  async destroyRawConnection(connection): Promise<void> {
     try {
       const end = promisify((cb) => connection.end(cb));
-      return await end();
+      await end();
     } catch (err) {
       connection.__knex__disposed = err;
     } finally {
@@ -100,7 +129,7 @@ export class SnowflakeDialect extends Client {
     }
   }
 
-  validateConnection(connection: any) {
+  async validateConnection(connection: any): Promise<boolean> {
     if (connection) {
       return true;
     }
@@ -111,7 +140,7 @@ export class SnowflakeDialect extends Client {
   // and any other necessary prep work.
   _query(connection: any, obj: any) {
     if (!obj || typeof obj === 'string') obj = { sql: obj };
-    return new Bluebird(function(resolver: any, rejecter: any) {
+    return new Bluebird((resolver: any, rejecter: any) => {
       if (!obj.sql) {
         resolver();
         return;
@@ -121,7 +150,7 @@ export class SnowflakeDialect extends Client {
           {
             sqlText: obj.sql,
             binds: obj.bindings,
-            complete: function (err: any, statement: any, rows: any) {
+            complete(err: any, statement: any, rows: any) {
               if (err) return rejecter(err);
               obj.response = {rows, statement};
               resolver(obj);

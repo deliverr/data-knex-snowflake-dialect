@@ -19,8 +19,8 @@
   "exclude": [
     "node_modules",
     "lib",
-    "src/**/*.uspec.ts",
-    "src/**/*.ispec.ts"
+    "test/**/*.uspec.ts",
+    "test/**/*.ispec.ts"
   ],
   "types": [ "typePatches" ]
 }
