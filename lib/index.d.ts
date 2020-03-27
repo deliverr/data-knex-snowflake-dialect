@@ -9,6 +9,7 @@ export declare class SnowflakeDialect extends Knex.Client {
     transaction(container: any, config: any, outerTx: any): Knex.Transaction;
     queryCompiler(builder: any): QueryCompiler;
     columnBuilder(tableBuilder: any, type: any, args: any): any;
+    columnCompiler(tableCompiler: any, columnBuilder: any): any;
     tableCompiler(tableBuilder: any): TableCompiler;
     schemaCompiler(builder: any): SchemaCompiler;
     _driver(): any;

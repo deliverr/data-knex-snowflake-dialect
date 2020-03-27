@@ -5,6 +5,7 @@ import { defer, map } from "lodash";
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
 import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
+import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/columncompiler";
 import * as Transaction from "knex/lib/transaction";
 import { promisify } from "util";
 
@@ -78,9 +79,21 @@ export class SnowflakeDialect extends Knex.Client {
     return columnBuilder;
   }
 
-  /*columnCompiler(tableCompiler: any, columnBuilder: any) {
-    return new ColumnCompiler_MySQL(this, tableCompiler.tableBuilder, columnBuilder);
-  }*/
+  columnCompiler(tableCompiler: any, columnBuilder: any) {
+    // ColumnCompiler methods are created at runtime, so that it does not play well with TypeScript.
+    // So instead of extending ColumnCompiler, we override methods at runtime here
+    const columnCompiler = new ColumnCompiler_MySQL(this, tableCompiler.tableBuilder, columnBuilder);
+    columnCompiler.mediumint = (colName: string) => "integer";
+    columnCompiler.decimal = (colName: string, precision?: number, scale?: number) => {
+      if (precision) {
+        return ColumnCompiler_MySQL.prototype.decimal(colName, precision, scale);
+      }
+      return "decimal";
+    };
+    columnCompiler.enu = (colName: string, values: string[]) => "varchar";
+    columnCompiler.json = columnCompiler.jsonb = (colName: string) => "variant";
+    return columnCompiler;
+  }
 
   tableCompiler(tableBuilder: any) {
     return new TableCompiler(this, tableBuilder);
