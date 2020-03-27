@@ -551,7 +551,7 @@ describe('Snowflake_SchemaBuilder', () => {
 
     equal(1, tableSql.toSQL().length);
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "USERS" add "FOO" double(15, 8)',
+      'alter table "USERS" add "FOO" decimal(15, 8)',
     );
   });
 

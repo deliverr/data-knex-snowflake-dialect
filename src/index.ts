@@ -93,6 +93,12 @@ export class SnowflakeDialect extends Knex.Client {
       }
       return "decimal";
     };
+    columnCompiler.double = (colName: string, precision?: number, scale?: number) => {
+      if (precision) {
+        return ColumnCompiler_MySQL.prototype.decimal(colName, precision, scale);
+      }
+      return "double";
+    };
     columnCompiler.enu = (colName: string, values: string[]) => "varchar";
     columnCompiler.json = columnCompiler.jsonb = (colName: string) => "variant";
     return columnCompiler;
