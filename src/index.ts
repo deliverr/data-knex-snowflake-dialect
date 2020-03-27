@@ -83,7 +83,10 @@ export class SnowflakeDialect extends Knex.Client {
     // ColumnCompiler methods are created at runtime, so that it does not play well with TypeScript.
     // So instead of extending ColumnCompiler, we override methods at runtime here
     const columnCompiler = new ColumnCompiler_MySQL(this, tableCompiler.tableBuilder, columnBuilder);
-    columnCompiler.mediumint = (colName: string) => "integer";
+    columnCompiler.increments = 'int not null autoincrement primary key';
+    columnCompiler.bigincrements = 'bigint not null autoincrement primary key';
+
+      columnCompiler.mediumint = (colName: string) => "integer";
     columnCompiler.decimal = (colName: string, precision?: number, scale?: number) => {
       if (precision) {
         return ColumnCompiler_MySQL.prototype.decimal(colName, precision, scale);

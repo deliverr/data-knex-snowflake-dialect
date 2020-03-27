@@ -18,7 +18,7 @@ describe('Snowflake_SchemaBuilder', () => {
       });
     equal(1, tableSql.toSQL().length);
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "USERS" add "ID" int unsigned not null auto_increment primary key, add "EMAIL" varchar(255)',
+      'alter table "USERS" add "ID" int not null autoincrement primary key, add "EMAIL" varchar(255)',
     );
   });
 
@@ -361,7 +361,7 @@ describe('Snowflake_SchemaBuilder', () => {
 
     equal(1, tableSql.toSQL().length);
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "USERS" add "ID" int unsigned not null auto_increment primary key',
+      'alter table "USERS" add "ID" int not null autoincrement primary key',
     );
   });
 
@@ -375,7 +375,7 @@ describe('Snowflake_SchemaBuilder', () => {
 
     equal(1, tableSql.toSQL().length);
     expect(tableSql.toSQL()[0].sql).toEqual(
-      'alter table "USERS" add "ID" bigint unsigned not null auto_increment primary key',
+      'alter table "USERS" add "ID" bigint not null autoincrement primary key',
     );
   });
 
