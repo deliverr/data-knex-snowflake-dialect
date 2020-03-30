@@ -1,0 +1,57 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier"
+  ],
+  "jsRules": {},
+  "rules": {
+    "align": false,
+    "array-type": [
+      false,
+      "array"
+    ],
+    "await-promise": [
+      true,
+      "Bluebird",
+      "QueryBuilder"
+    ],
+    "cyclomatic-complexity": [
+      true,
+      12
+    ],
+    "deprecation": false,
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "missing-jsdoc": false,
+    "mocha-unneeded-done": true,
+    "mocha-avoid-only": true,
+    "mocha-no-side-effect-code": [true, { "ignore": "it.skip.*" }],
+    "newline-before-return": false,
+    "no-angle-bracket-type-assertion": true,
+    "no-backbone-get-set-outside-model": false,
+    "no-console": true,
+    "no-floating-promises": true,
+    "no-for-in-array": true,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-import-side-effect": [
+      true,
+      {
+        "ignore-module": "dotenv/config"
+      }
+    ],
+    "no-object-literal-type-assertion": true,
+    "no-relative-imports": false,
+    "no-return-await": true,
+    "no-submodule-imports": false,
+    "no-unsafe-any": false,
+    "object-literal-sort-keys": false,
+    "prefer-type-cast": false,
+    "promise-function-async": true,
+    "trailing-comma": false,
+    "typedef": true
+  },
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"]
+}

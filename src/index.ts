@@ -1,14 +1,15 @@
 import * as Bluebird from "bluebird";
-// @ts-ignore
-import * as Client from "knex/lib/client";
-import { defer, map } from "lodash";
+import * as Knex from "knex";
+import { defer, fromPairs, isArray, map, toPairs } from "lodash";
 
-import { SnowflakeTransaction } from "./Transaction";
 import { QueryCompiler } from "./query/QueryCompiler";
-import { SnowflakeColumnBuilder } from "./schema/ColumnBuilder";
+import { SchemaCompiler, TableCompiler } from "./schema";
+import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
+import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/columncompiler";
+import * as Transaction from "knex/lib/transaction";
 import { promisify } from "util";
 
-export class SnowflakeDialect extends Client {
+export class SnowflakeDialect extends Knex.Client {
   constructor(config = {} as any) {
     if (config.connection) {
       if (config.connection.user && !config.connection.username) {
@@ -35,32 +36,81 @@ export class SnowflakeDialect extends Client {
     return "snowflake-sdk";
   }
 
-  transaction() {
-    return new SnowflakeTransaction();
+  transaction(container: any, config: any, outerTx: any): Knex.Transaction {
+    const transax = new Transaction(this, container, config, outerTx);
+    transax.savepoint = (conn: any) => {
+      // @ts-ignore
+      transax.trxClient.logger('Snowflake does not support savepoints.');
+    };
+
+    transax.release = (conn: any, value: any) => {
+      // @ts-ignore
+      transax.trxClient.logger('Snowflake does not support savepoints.');
+    };
+
+    transax.rollbackTo = (conn: any, error: any) => {
+      // @ts-ignore
+      this.trxClient.logger('Snowflake does not support savepoints.');
+    };
+    return transax;
   }
 
   queryCompiler(builder: any) {
-    // @ts-ignore
     return new QueryCompiler(this, builder);
   }
 
-  columnBuilder() {
-    return new SnowflakeColumnBuilder();
+  columnBuilder(tableBuilder: any, type: any, args: any) {
+    // ColumnBuilder methods are created at runtime, so that it does not play well with TypeScript.
+    // So instead of extending ColumnBuilder, we override methods at runtime here
+    const columnBuilder = new ColumnBuilder(this, tableBuilder, type, args);
+    columnBuilder.primary = (constraintName?: string | undefined): Knex.ColumnBuilder => {
+      // @ts-ignore
+      columnBuilder.notNullable();
+      return columnBuilder;
+    };
+    columnBuilder.index = (indexName?: string | undefined): Knex.ColumnBuilder => {
+      // @ts-ignore
+      columnBuilder.client.logger.warn(
+        'Snowflake does not support the creation of indexes.'
+      );
+      return columnBuilder;
+    };
+
+    return columnBuilder;
   }
 
-  /** The following will likely be needed, but have not yet been implemented
-  columnCompiler() {
-    return new ColumnCompiler(this, ...arguments);
-  },
+  columnCompiler(tableCompiler: any, columnBuilder: any) {
+    // ColumnCompiler methods are created at runtime, so that it does not play well with TypeScript.
+    // So instead of extending ColumnCompiler, we override methods at runtime here
+    const columnCompiler = new ColumnCompiler_MySQL(this, tableCompiler.tableBuilder, columnBuilder);
+    columnCompiler.increments = 'int not null autoincrement primary key';
+    columnCompiler.bigincrements = 'bigint not null autoincrement primary key';
 
-  tableCompiler() {
-    return new TableCompiler(this, ...arguments);
-  },
+      columnCompiler.mediumint = (colName: string) => "integer";
+    columnCompiler.decimal = (colName: string, precision?: number, scale?: number) => {
+      if (precision) {
+        return ColumnCompiler_MySQL.prototype.decimal(colName, precision, scale);
+      }
+      return "decimal";
+    };
+    columnCompiler.double = (colName: string, precision?: number, scale?: number) => {
+      if (precision) {
+        return ColumnCompiler_MySQL.prototype.decimal(colName, precision, scale);
+      }
+      return "double";
+    };
+    columnCompiler.enu = (colName: string, values: string[]) => "varchar";
+    columnCompiler.json = columnCompiler.jsonb = (colName: string) => "variant";
+    return columnCompiler;
+  }
 
-  schemaCompiler() {
-    return new SchemaCompiler(this, ...arguments);
-  },
-  **/
+  tableCompiler(tableBuilder: any) {
+    return new TableCompiler(this, tableBuilder);
+  }
+
+  schemaCompiler(builder: any) {
+    return new SchemaCompiler(this, builder);
+  }
 
   _driver() {
     const Snowflake = require("snowflake-sdk");
@@ -89,10 +139,10 @@ export class SnowflakeDialect extends Client {
 
   // Used to explicitly close a connection, called internally by the pool
   // when a connection times out or the pool is shutdown.
-  async destroyRawConnection(connection) {
+  async destroyRawConnection(connection): Promise<void> {
     try {
       const end = promisify((cb) => connection.end(cb));
-      return await end();
+      await end();
     } catch (err) {
       connection.__knex__disposed = err;
     } finally {
@@ -101,7 +151,7 @@ export class SnowflakeDialect extends Client {
     }
   }
 
-  validateConnection(connection: any) {
+  async validateConnection(connection: any): Promise<boolean> {
     if (connection) {
       return true;
     }
@@ -112,7 +162,7 @@ export class SnowflakeDialect extends Client {
   // and any other necessary prep work.
   _query(connection: any, obj: any) {
     if (!obj || typeof obj === 'string') obj = { sql: obj };
-    return new Bluebird(function(resolver: any, rejecter: any) {
+    return new Bluebird((resolver: any, rejecter: any) => {
       if (!obj.sql) {
         resolver();
         return;
@@ -122,7 +172,7 @@ export class SnowflakeDialect extends Client {
           {
             sqlText: obj.sql,
             binds: obj.bindings,
-            complete: function (err: any, statement: any, rows: any) {
+            complete(err: any, statement: any, rows: any) {
               if (err) return rejecter(err);
               obj.response = {rows, statement};
               resolver(obj);
@@ -151,6 +201,38 @@ export class SnowflakeDialect extends Client {
       return resp.rowCount;
     }
     return resp;
+  }
+
+  postProcessResponse(result, queryContext) {
+    if (this.config.postProcessResponse) {
+      return this.config.postProcessResponse(result, queryContext);
+    }
+    // Snowflake returns column names in uppercase, convert to lowercase
+    // (to conform with knex, e.g. schema migrations)
+    const lowercaseAttrs = (row: any) => {
+      return fromPairs(
+        toPairs(row).map(([key, value]) => [key.toLowerCase(), value])
+      );
+    };
+    if (result.rows) {
+      return {
+        ...result,
+        rows: result.rows.map(lowercaseAttrs)
+      };
+    } else if (isArray(result)) {
+      return result.map(lowercaseAttrs);
+    }
+    return result;
+  };
+
+  customWrapIdentifier(value, origImpl, queryContext) {
+    if (this.config.wrapIdentifier) {
+      return this.config.wrapIdentifier(value, origImpl, queryContext);
+    }
+    else if (!value.startsWith('"')) {
+      return origImpl(value.toUpperCase());
+    }
+    return origImpl;
   }
 
 }

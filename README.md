@@ -1,7 +1,7 @@
 # knex-snowflake-dialect
 knex.js dialect for the Snowflake data warehouse.
 
-As of release 0.1.x, only the `connect` and `raw` query methods have been tested.
+As of release 0.2.x, the `connect` and `raw` query methods have been tested, along with schema migrations.
 
 ## Installation
 

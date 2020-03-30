@@ -12,14 +12,15 @@
     "noImplicitReturns": true,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "removeComments": false
   },
   "include": ["src"],
   "exclude": [
     "node_modules",
     "lib",
-    "src/**/*.uspec.ts",
-    "src/**/*.ispec.ts"
+    "test/**/*.uspec.ts",
+    "test/**/*.ispec.ts"
   ],
   "types": [ "typePatches" ]
 }
