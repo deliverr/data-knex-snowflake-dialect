@@ -1,6 +1,6 @@
 import * as Bluebird from "bluebird";
 import * as Knex from "knex";
-import { defer, map } from "lodash";
+import { defer, fromPairs, isArray, map, toPairs } from "lodash";
 
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
@@ -202,6 +202,25 @@ export class SnowflakeDialect extends Knex.Client {
     }
     return resp;
   }
+
+  postProcessResponse(result, queryContext) {
+    // Snowflake returns column names in uppercase, convert to lowercase
+    // (to conform with knex, e.g. schema migrations)
+    const lowercaseAttrs = (row: any) => {
+      return fromPairs(
+        toPairs(row).map(([key, value]) => [key.toLowerCase(), value])
+      );
+    };
+    if (result.rows) {
+      return {
+        ...result,
+        rows: result.rows.map(lowercaseAttrs)
+      };
+    } else if (isArray(result)) {
+      return result.map(lowercaseAttrs);
+    }
+    return result;
+  };
 
   customWrapIdentifier(value, origImpl, queryContext) {
     if (this.config.wrapIdentifier) {

@@ -20,5 +20,6 @@ export declare class SnowflakeDialect extends Knex.Client {
     validateConnection(connection: any): Promise<boolean>;
     _query(connection: any, obj: any): Bluebird<unknown>;
     processResponse(obj: any, runner: any): any;
+    postProcessResponse(result: any, queryContext: any): any;
     customWrapIdentifier(value: any, origImpl: any, queryContext: any): any;
 }
