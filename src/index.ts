@@ -204,6 +204,9 @@ export class SnowflakeDialect extends Knex.Client {
   }
 
   postProcessResponse(result, queryContext) {
+    if (this.config.postProcessResponse) {
+      return this.config.postProcessResponse(result, queryContext);
+    }
     // Snowflake returns column names in uppercase, convert to lowercase
     // (to conform with knex, e.g. schema migrations)
     const lowercaseAttrs = (row: any) => {
