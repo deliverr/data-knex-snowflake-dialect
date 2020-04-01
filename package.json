@@ -1,6 +1,6 @@
 {
   "name": "knex-snowflake-dialect",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -54,7 +54,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
-    "snowflake-sdk": "1.5.0"
+    "snowflake-sdk": "1.5.1"
   },
   "peerDependencies": {
     "knex": "^0.15.2"
