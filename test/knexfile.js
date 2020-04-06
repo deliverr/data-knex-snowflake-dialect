@@ -3,13 +3,13 @@
 
 const assert = require('assert');
 const { promisify } = require('util');
-const testConfig =
-  (process.env.KNEX_TEST && require(process.env.KNEX_TEST)) || {};
+const testConfig = (process.env.KNEX_TEST && require(process.env.KNEX_TEST)) || {};
 const _ = require('lodash');
+const Snowflake = require("../lib");
 
 // excluding redshift, oracle, and mssql dialects from default integrations test
 const testIntegrationDialects = (
-  process.env.DB || 'mysql'
+  process.env.DB || 'snowflake'
 ).match(/\w+/g);
 
 const pool = {
@@ -62,6 +62,14 @@ const testConfigs = {
     migrations,
     seeds,
   },
+  snowflake: {
+    client: Snowflake.SnowflakeDialect,
+    connection: process.env.SNOWFLAKE_URL,
+    debug: true,
+    pool,
+    migrations,
+    seeds,
+  }
 };
 
 // export only copy the specified dialects
