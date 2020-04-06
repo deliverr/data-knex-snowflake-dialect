@@ -188,17 +188,27 @@ export class SnowflakeDialect extends Knex.Client {
     const resp = obj.response;
     if (obj.output) return obj.output.call(runner, resp);
     if (obj.method === 'raw') return resp;
-    if (resp.command === 'SELECT' || (resp.statement && resp.rows)) {
-      if (obj.method === 'first') return resp.rows[0];
-      if (obj.method === 'pluck') return map(resp.rows, obj.pluck);
+    if (obj.method === 'select') {
+      // if (obj.method === 'first') return resp.rows[0];
+      // if (obj.method === 'pluck') return map(resp.rows, obj.pluck);
       return resp.rows;
     }
     if (
-      resp.command === 'INSERT' ||
-      resp.command === 'UPDATE' ||
-      resp.command === 'DELETE'
+      obj.method === 'insert' ||
+      obj.method === 'update' ||
+      obj.method === 'delete'
     ) {
-      return resp.rowCount;
+      if (resp.rows) {
+        const method = obj.method === 'insert' ? 'inserte' : obj.method;
+        return resp.rows.reduce(
+          (count, row) => count + row[`number of rows ${method}d`],
+          0
+        );
+      }
+      return resp;
+    }
+    if (resp.statement && resp.rows) {
+      return resp.rows;
     }
     return resp;
   }
