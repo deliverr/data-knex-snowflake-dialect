@@ -11,7 +11,7 @@ export class TableCompiler extends TableCompiler_MySQL {
       // @ts-ignore
       this.pushQuery({
         // @ts-ignore
-        sql: 'ALTER TABLE ' + this.tableName() + ' ADD ' + columns.sql.join(', '),
+        sql: 'ALTER TABLE ' + this.tableName() + ' ' + this.addColumnsPrefix + columns.sql.join(', '),
         bindings: columns.bindings
       });
     }
