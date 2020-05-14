@@ -6,6 +6,17 @@ export class TableCompiler extends TableCompiler_MySQL {
     super(client, builder);
   }
 
+  addColumns(columns) {
+    if (columns.sql.length > 0) {
+      // @ts-ignore
+      this.pushQuery({
+        // @ts-ignore
+        sql: 'ALTER TABLE ' + this.tableName() + ' ADD ' + columns.sql.join(', '),
+        bindings: columns.bindings
+      });
+    }
+  }
+
   index(columns, indexName, indexType) {
     // @ts-ignore
     this.client.logger.warn('Snowflake does not support the creation of indexes.');
