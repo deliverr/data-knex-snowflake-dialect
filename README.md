@@ -6,7 +6,7 @@ As of release 0.2.x, the `connect` and `raw` query methods have been tested, alo
 ## Installation
 
 ```shell script
-npm install knex-snowflake-client
+npm install knex-snowflake-dialect
 ```
 
 ## Usage
