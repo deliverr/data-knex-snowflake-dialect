@@ -1,11 +1,12 @@
 {
-  "name": "knex-snowflake-dialect",
-  "version": "0.2.5",
+  "name": "pmg-knex-snowflake-dialect",
+  "version": "1.0.0",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "test"
   },
   "scripts": {
     "build": "tsc",
@@ -20,18 +21,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deliverr/knex-snowflake-dialect.git"
+    "url": "git+https://github.com/AgencyPMG/pmg-data-knex-snowflake-dialect"
   },
-  "author": "Emmet Murphy",
+  "author": "Nicholas Lee",
   "keywords": [
     "knex",
     "snowflake"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/deliverr/knex-snowflake-dialect/issues"
+    "url": "https://github.com/AgencyPMG/pmg-data-knex-snowflake-dialect/issues"
   },
-  "homepage": "https://github.com/deliverr/knex-snowflake-dialect#readme",
+  "homepage": "https://github.com/AgencyPMG/pmg-data-knex-snowflake-dialect#readme",
   "jest": {
     "automock": false,
     "transform": {
