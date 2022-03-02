@@ -1,6 +1,6 @@
 {
   "name": "pmg-knex-snowflake-dialect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "knex.js dialect for the Snowflake data warehouse",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
