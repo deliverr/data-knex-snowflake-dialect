@@ -1,30 +1,14 @@
 {
   "defaultSeverity": "error",
-  "extends": [
-    "tslint:latest",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:latest", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
     "align": false,
-    "array-type": [
-      false,
-      "array"
-    ],
-    "await-promise": [
-      true,
-      "Bluebird",
-      "QueryBuilder"
-    ],
-    "cyclomatic-complexity": [
-      true,
-      12
-    ],
+    "array-type": [false, "array"],
+    "await-promise": [true, "QueryBuilder"],
+    "cyclomatic-complexity": [true, 12],
     "deprecation": false,
-    "interface-name": [
-      true,
-      "never-prefix"
-    ],
+    "interface-name": [true, "never-prefix"],
     "missing-jsdoc": false,
     "mocha-unneeded-done": true,
     "mocha-avoid-only": true,
