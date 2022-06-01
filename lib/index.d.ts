@@ -1,13 +1,9 @@
 import * as Bluebird from "bluebird";
-import * as Knex from "knex";
+import { Knex } from "knex";
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
 export declare class SnowflakeDialect extends Knex.Client {
     constructor(config?: any);
-    // @ts-ignore
-    get dialect(): string;
-    // @ts-ignore
-    get driverName(): string;
     transaction(container: any, config: any, outerTx: any): Knex.Transaction;
     queryCompiler(builder: any): QueryCompiler;
     columnBuilder(tableBuilder: any, type: any, args: any): any;

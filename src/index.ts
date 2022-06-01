@@ -1,16 +1,19 @@
 import * as Bluebird from "bluebird";
-import * as Knex from "knex";
+import { Knex } from "knex";
 import { defer, fromPairs, isArray, map, toPairs } from "lodash";
 
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
 import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
-import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/columncompiler";
-import * as Transaction from "knex/lib/transaction";
+import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/mysql-columncompiler";
+import * as Transaction from "knex/lib/execution/transaction";
 import { promisify } from "util";
 
 export class SnowflakeDialect extends Knex.Client {
-  constructor(config = {} as any) {
+  constructor(config = {
+    dialect: "snowflake",
+    driverName: "snowflake-sdk",
+  } as any) {
     if (config.connection) {
       if (config.connection.user && !config.connection.username) {
         config.connection.username = config.connection.user;
@@ -26,14 +29,6 @@ export class SnowflakeDialect extends Knex.Client {
       }
     }
     super(config);
-  }
-
-  public get dialect() {
-    return "snowflake";
-  }
-
-  public get driverName() {
-    return "snowflake-sdk";
   }
 
   transaction(container: any, config: any, outerTx: any): Knex.Transaction {
