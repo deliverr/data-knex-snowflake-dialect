@@ -48,8 +48,12 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: "Deploy"
-          command: echo $NPM_TOKEN
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: git config user.email "art@deliverr.com"
+      - run: git config user.name "Github Bot"
+      - run:
+          name: Bumping package version
+          command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
 
 workflows:
   version: 2
