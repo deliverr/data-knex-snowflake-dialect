@@ -56,7 +56,7 @@ jobs:
           command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
       - run:
           name: Push changes to Github
-          command: echo $(git branch)
+          command: git push -u origin circleci-project-setup && git push --tags
       
 
 workflows:
