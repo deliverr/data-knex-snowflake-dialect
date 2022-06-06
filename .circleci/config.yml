@@ -57,7 +57,7 @@ jobs:
 
       - run:
           name: Publishing packages to npm
-          command: npm publish --tag $npm_package --dry-run
+          command: npm publish --dry-run
 
 workflows:
   version: 2
