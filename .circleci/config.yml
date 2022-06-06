@@ -68,6 +68,4 @@ workflows:
           requires:
             - lint-check
             - unit-tests
-          filters:
-            branches:
-              only: master
+          
