@@ -5858,7 +5858,7 @@ describe('QueryBuilder', () => {
       throw new Error('Should not reach this point');
     } catch (error) {
       expect(error.message).toEqual(
-        'Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query.'
+        'Empty .update() call detected! Update data does not contain any values to update. This will result in a faulty query. Table: sometable. Columns: foobar.'
       );
     }
   });

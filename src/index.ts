@@ -1,12 +1,12 @@
 import * as Bluebird from "bluebird";
-import { Knex } from "knex";
+import * as Knex from "knex";
 import { defer, fromPairs, isArray, map, toPairs } from "lodash";
 
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
 import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
-import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/mysql-columncompiler";
-import * as Transaction from "knex/lib/execution/transaction";
+import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/columncompiler";
+import * as Transaction from "knex/lib/transaction";
 import { promisify } from "util";
 
 export class SnowflakeDialect extends Knex.Client {
