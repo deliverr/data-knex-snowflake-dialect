@@ -55,6 +55,10 @@ jobs:
           name: Bumping package version
           command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
 
+      - run:
+          name: Publishing packages to npm
+          command: npm publish --tag $npm_package --dry-run
+
 workflows:
   version: 2
   build-test-lint-deploy:
