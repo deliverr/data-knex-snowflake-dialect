@@ -56,7 +56,7 @@ jobs:
           command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
       - run:
           name: Push changes to Github
-          command: git push && git push --tags
+          command: git push -u  && git push --tags
       
 
 workflows:
