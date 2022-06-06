@@ -49,7 +49,7 @@ jobs:
           at: ~/
       - run:
           name: "Deploy"
-          command: echo "deploy"
+          command: echo $NPM_TOKEN
 
 workflows:
   version: 2
@@ -63,6 +63,8 @@ workflows:
           requires:
             - build
       - deploy:
+          context:
+            - node
           requires:
             - lint-check
             - unit-tests
