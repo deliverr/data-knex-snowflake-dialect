@@ -55,8 +55,8 @@ jobs:
           name: Bumping package version
           command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
       - run:
-        name: Push changes to Github
-        command: git push && git push --tags
+          name: Push changes to Github
+          command: git push && git push --tags
       
 
 workflows:
