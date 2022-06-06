@@ -20,11 +20,15 @@ jobs:
       - run:
           name: Building package
           command: npm run build
+      - persist_to_workspace:
+          root: ~/
+          paths: .
 
   unit-tests:
     <<: *defaults
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: "Running unit tests"
           command: npm run test
@@ -32,7 +36,8 @@ jobs:
   lint-check:
     <<: *defaults
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: "Linting the code with tslint"
           command: npm run lint
@@ -40,7 +45,8 @@ jobs:
   deploy:
     <<: *defaults
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: "Deploy"
           command: echo "deploy"
