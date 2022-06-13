@@ -48,9 +48,9 @@ export class SnowflakeDialect extends knex.Client {
     };
     return transax;
   }
-
-  queryCompiler(builder: any) {
-    return new QueryCompiler(this, builder);
+  // @ts-ignore
+  queryCompiler(builder: any, formatter: any) {
+    return new QueryCompiler(this, builder, formatter);
   }
 
   columnBuilder(tableBuilder: any, type: any, args: any) {

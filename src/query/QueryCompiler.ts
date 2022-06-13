@@ -2,8 +2,8 @@
 import * as QueryCompiler_MySQL from "knex/lib/dialects/mysql/query/mysql-querycompiler";
 
 export class QueryCompiler extends QueryCompiler_MySQL {
-  constructor(client: any, builder: any) {
-    super(client, builder);
+  constructor(client: any, builder: any, formatter: any) {
+    super(client, builder, formatter);
   }
 
   forUpdate() {

@@ -599,7 +599,7 @@ describe('QueryBuilder', () => {
       {
         "snowflake-sdk": {
           sql: 'select * from "USERS" where not ("ID" = ? or not "ID" = ?)',
-          bindings: [],
+          bindings: [1, 3],
         }
       }
     );
@@ -613,7 +613,7 @@ describe('QueryBuilder', () => {
           this.where('id', '=', 1).orWhereNot('id', '=', 3);
         }),
       {
-        "snowflake-sdk": 'select * from "USERS" where not ("ID" = ? or not "ID" = ?)'
+        "snowflake-sdk": 'select * from "USERS" where not ("ID" = 1 or not "ID" = 3)'
       }
     );
   });
@@ -630,7 +630,7 @@ describe('QueryBuilder', () => {
       {
         "snowflake-sdk": {
           sql: 'select * from "USERS" where ("ID" = ? or not "ID" = ?)',
-          bindings: [],
+          bindings: [1, 3],
         }
       }
     );
@@ -644,7 +644,7 @@ describe('QueryBuilder', () => {
           this.where('id', '=', 1).orWhereNot('id', '=', 3);
         }),
       {
-        "snowflake-sdk": 'select * from "USERS" where ("ID" = ? or not "ID" = ?)'
+        "snowflake-sdk": 'select * from "USERS" where ("ID" = 1 or not "ID" = 3)'
       }
     );
   });
@@ -1050,7 +1050,7 @@ describe('QueryBuilder', () => {
     testsql(partial.where(subWhere), {
       "snowflake-sdk": {
         sql: 'select * from "TEST" where "ID" = ? and ("ID" = ? or "ID" = ?)',
-        bindings: [1],
+        bindings: [1, 3, 4],
       }
     });
   });
@@ -1077,13 +1077,13 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * where "ID" = (select "ACCOUNT_ID" from "NAMES" where "NAMES"."ID" > ? or ("NAMES"."FIRST_NAME" like ? and "NAMES"."ID" > ?))',
-        bindings: [],
+        bindings: [1, 'Tim%', 10],
       }
     });
 
     testquery(chain, {
       "snowflake-sdk":
-        `select * where "ID" = (select "ACCOUNT_ID" from "NAMES" where "NAMES"."ID" > ? or ("NAMES"."FIRST_NAME" like ? and "NAMES"."ID" > ?))`
+        `select * where "ID" = (select "ACCOUNT_ID" from "NAMES" where "NAMES"."ID" > 1 or ("NAMES"."FIRST_NAME" like 'Tim%' and "NAMES"."ID" > 10))`
     });
   });
 
@@ -1109,7 +1109,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * where "ID" = (select "ACCOUNT_ID" from "NAMES" where "NAMES"."ID" > ? or ("NAMES"."FIRST_NAME" like ? and "NAMES"."ID" > ?))',
-        bindings: [],
+        bindings: [1, 'Tim%', 10],
       }
     });
   });
@@ -1141,7 +1141,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2],
       }
     });
 
@@ -1167,7 +1167,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1193,7 +1193,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
   });
@@ -1326,7 +1326,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1355,7 +1355,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
   });
@@ -1384,7 +1384,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union all select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2],
       }
     });
 
@@ -1410,7 +1410,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union all select * from "USERS" where "ID" = ? union all select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1436,7 +1436,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union all select * from "USERS" where "ID" = ? union all select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
   });
@@ -1462,7 +1462,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ? union select * from "USERS" where "ID" = ?',
-        bindings: [1, 2],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1586,7 +1586,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2],
       }
     });
 
@@ -1612,7 +1612,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1638,7 +1638,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ?',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
   });
@@ -1691,7 +1691,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1720,7 +1720,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
-        bindings: [1],
+        bindings: [1, 2, 3],
       }
     });
   });
@@ -1746,7 +1746,7 @@ describe('QueryBuilder', () => {
       "snowflake-sdk": {
         sql:
           'select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ? intersect select * from "USERS" where "ID" = ?',
-        bindings: [1, 2],
+        bindings: [1, 2, 3],
       }
     });
 
@@ -1804,7 +1804,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "ID" in (select "ID" from "USERS" where "AGE" > ? limit ?)',
-          bindings: [],
+          bindings: [25, 3],
         }
       }
     );
@@ -1825,7 +1825,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where ("ID_A", "ID_B") in (select "ID_A", "ID_B" from "USERS" where "AGE" > ? limit ?)',
-          bindings: [],
+          bindings: [25, 3],
         }
       }
     );
@@ -1845,7 +1845,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "ID" not in (select "ID" from "USERS" where "AGE" > ?)',
-          bindings: [],
+          bindings: [25],
         }
       }
     );
@@ -2557,7 +2557,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "EMAIL" = ? or ("NAME" = ? and "AGE" = ?)',
-          bindings: ['foo'],
+          bindings: ['foo', 'bar', 25],
         }
       }
     );
@@ -2617,7 +2617,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "EMAIL" = ? or "ID" = (select max(id) from "USERS" where "EMAIL" = ?)',
-          bindings: ['foo'],
+          bindings: ['foo', 'bar'],
         }
       }
     );
@@ -2640,7 +2640,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select "EMAIL" from "USERS" where "EMAIL" = ? or "ID" = (select * from "USERS" where "EMAIL" = ?)',
-          bindings: ['foo'],
+          bindings: ['foo', 'bar'],
         }
       }
     );
@@ -2663,7 +2663,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "EMAIL" = ? or "ID" = (select max(id) from "USERS" where "EMAIL" = ?)',
-          bindings: ['foo'],
+          bindings: ['foo', 'bar'],
         }
       }
     );
@@ -4496,7 +4496,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'insert into recipients (recipient_id, EMAIL) select ?, ? where not exists (select 1 from "RECIPIENTS" where "RECIPIENT_ID" = ?)',
-          bindings: [1, 'foo@bar.com'],
+          bindings: [1, 'foo@bar.com', 1],
         }
       }
     );
@@ -4542,7 +4542,7 @@ describe('QueryBuilder', () => {
     testsql(q2, {
       "snowflake-sdk": {
         sql: 'insert into "RECIPIENTS" (recipient_id, EMAIL) (select \'user\', \'user@foo.com\' where not exists (select 1 from "RECIPIENTS" where "RECIPIENT_ID" = ?))',
-        bindings: []
+        bindings: [1]
       }
     });
   });
@@ -4822,7 +4822,7 @@ describe('QueryBuilder', () => {
       {
         "snowflake-sdk": {
           sql: 'insert into "VOTES" select * from "VOTES" where "ID" = ?',
-          bindings: [],
+          bindings: [99],
         }
       }
     );
@@ -5158,7 +5158,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'select * from "USERS" where "ID" = ? or ("EMAIL" = ? and "ID" = ?)',
-          bindings: [1],
+          bindings: [1, 'foo', 2],
         }
       }
     );
@@ -5521,7 +5521,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'with "WITHCLAUSE" as (select "FOO" from "USERS" where "NAME" = ?) insert into "USERS" ("EMAIL", "NAME") values (?, ?), (?, ?)',
-          bindings: ['thisMail', 'sam', 'thatMail', 'jack'],
+          bindings: ['bob', 'thisMail', 'sam', 'thatMail', 'jack'],
         }
       }
     );
@@ -5639,7 +5639,7 @@ describe('QueryBuilder', () => {
         "snowflake-sdk": {
           sql:
             'with "WITHCLAUSE" as (with "WITHSUBCLAUSE" as (select "FOO" as "BAZ" from "USERS" where "BAZ" > ? and "BAZ" < ?) select * from "WITHSUBCLAUSE") select * from "WITHCLAUSE" where "ID" = ?',
-          bindings: [10],
+          bindings: [1, 20, 10],
         }
       }
     );
