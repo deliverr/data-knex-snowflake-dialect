@@ -81,4 +81,5 @@ workflows:
             - unit-tests
           filters:
             branches:
-              only: master          
+              only: master
+              only: 0.x          
