@@ -1,15 +1,14 @@
 import * as Bluebird from "bluebird";
-import * as Knex from "knex";
+import { Knex, knex } from "knex";
 import { defer, fromPairs, isArray, map, toPairs } from "lodash";
-
 import { QueryCompiler } from "./query/QueryCompiler";
 import { SchemaCompiler, TableCompiler } from "./schema";
 import * as ColumnBuilder from "knex/lib/schema/columnbuilder";
-import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/columncompiler";
-import * as Transaction from "knex/lib/transaction";
+import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/mysql-columncompiler";
+import * as Transaction from "knex/lib/execution/transaction";
 import { promisify } from "util";
 
-export class SnowflakeDialect extends Knex.Client {
+export class SnowflakeDialect extends knex.Client {
   constructor(config = {
     dialect: "snowflake",
     driverName: "snowflake-sdk",
@@ -49,9 +48,9 @@ export class SnowflakeDialect extends Knex.Client {
     };
     return transax;
   }
-
-  queryCompiler(builder: any) {
-    return new QueryCompiler(this, builder);
+  // @ts-ignore
+  queryCompiler(builder: any, formatter: any) {
+    return new QueryCompiler(this, builder, formatter);
   }
 
   columnBuilder(tableBuilder: any, type: any, args: any) {

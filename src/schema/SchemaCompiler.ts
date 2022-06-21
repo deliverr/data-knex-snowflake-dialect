@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as SchemaCompiler_MySQL from "knex/lib/dialects/mysql/schema/compiler";
+import * as SchemaCompiler_MySQL from "knex/lib/dialects/mysql/schema/mysql-compiler";
 
 export class SchemaCompiler extends SchemaCompiler_MySQL {
   constructor(client: any, builder: any) {

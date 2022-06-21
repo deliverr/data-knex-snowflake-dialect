@@ -1,5 +1,4 @@
 import { SnowflakeDialect } from "../../../src";
-import { QueryBuilder } from "knex";
 import * as PostgresClient from "knex/lib/dialects/postgres";
 
 // use driverName as key
@@ -5874,7 +5873,7 @@ describe('QueryBuilder', () => {
       throw new Error('Should not reach this point');
     } catch (error) {
       expect(error.message).toEqual(
-        'Cannot chain .first() on "update" query!'
+        'Cannot chain .first() on "update" query'
       );
     }
   });
@@ -5890,7 +5889,7 @@ describe('QueryBuilder', () => {
       throw new Error('Should not reach this point');
     } catch (error) {
       expect(error.message).toEqual(
-        'Cannot chain .first() on "insert" query!'
+        'Cannot chain .first() on "insert" query'
       );
     }
   });
@@ -5905,7 +5904,7 @@ describe('QueryBuilder', () => {
 
       throw new Error('Should not reach this point');
     } catch (error) {
-      expect(error.message).toEqual('Cannot chain .first() on "del" query!');
+      expect(error.message).toEqual('Cannot chain .first() on "del" query');
     }
   });
 
