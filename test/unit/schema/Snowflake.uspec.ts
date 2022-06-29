@@ -228,7 +228,7 @@ describe('Snowflake_SchemaBuilder', () => {
       .renameTable('users', 'foo');
 
     equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('rename table "USERS" to "FOO"');
+    expect(tableSql.toSQL()[0].sql).toEqual('alter table "USERS" rename to "FOO"');
   });
 
   it('test adding primary key', () => {
