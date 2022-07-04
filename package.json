@@ -16,7 +16,8 @@
     "test": "npm run lint && jest --runInBand --silent --forceExit --detectOpenHandles",
     "coverage": "jest --coverage --silent && open coverage/lcov-report/index.html",
     "prepush": "npm test uspec",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json"
+    "tslint-check": "tslint-config-prettier-check ./tslint.json",
+	"prepare": "npm run build"
   },
   "repository": {
     "type": "git",
