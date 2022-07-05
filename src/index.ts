@@ -1,4 +1,3 @@
-import * as Bluebird from "bluebird";
 import { Knex, knex } from "knex";
 import { defer, fromPairs, isArray, map, toPairs } from "lodash";
 import { QueryCompiler } from "./query/QueryCompiler";
@@ -112,7 +111,7 @@ export class SnowflakeDialect extends knex.Client {
   // Get a raw connection, called by the `pool` whenever a new
   // connection needs to be added to the pool.
   acquireRawConnection() {
-    return new Bluebird((resolver, rejecter) => {
+    return new Promise((resolve, reject) => {
       // @ts-ignore
       const connection = this.driver.createConnection(this.connectionSettings);
       connection.on('error', (err) => {
@@ -122,9 +121,9 @@ export class SnowflakeDialect extends knex.Client {
         if (err) {
           // if connection is rejected, remove listener that was registered above...
           connection.removeAllListeners();
-          return rejecter(err);
+          return reject(err);
         }
-        resolver(connection);
+        resolve(connection);
       });
     });
   }
@@ -154,9 +153,9 @@ export class SnowflakeDialect extends knex.Client {
   // and any other necessary prep work.
   _query(connection: any, obj: any) {
     if (!obj || typeof obj === 'string') obj = { sql: obj };
-    return new Bluebird((resolver: any, rejecter: any) => {
+    return new Promise((resolve: any, reject: any) => {
       if (!obj.sql) {
-        resolver();
+        resolve();
         return;
       }
 
@@ -165,9 +164,9 @@ export class SnowflakeDialect extends knex.Client {
             sqlText: obj.sql,
             binds: obj.bindings,
             complete(err: any, statement: any, rows: any) {
-              if (err) return rejecter(err);
+              if (err) return reject(err);
               obj.response = {rows, statement};
-              resolver(obj);
+              resolve(obj);
             },
             ...obj.options
           };
