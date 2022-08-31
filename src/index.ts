@@ -8,6 +8,14 @@ import * as ColumnCompiler_MySQL from "knex/lib/dialects/mysql/schema/mysql-colu
 import * as Transaction from "knex/lib/execution/transaction";
 import { promisify } from "util";
 
+// Snowflake returns column names in uppercase, convert to lowercase
+// (to conform with knex, e.g. schema migrations)
+const lowercaseAttrs = (row: any) => {
+  return fromPairs(
+    toPairs(row).map(([key, value]) => [key.toLowerCase(), value])
+  );
+};
+
 export class SnowflakeDialect extends knex.Client {
   constructor(config = {
     dialect: "snowflake",
@@ -28,6 +36,7 @@ export class SnowflakeDialect extends knex.Client {
       }
     }
     super(config);
+    this.canCancelQuery = true;
   }
 
   transaction(container: any, config: any, outerTx: any): Knex.Transaction {
@@ -51,6 +60,13 @@ export class SnowflakeDialect extends knex.Client {
   // @ts-ignore
   queryCompiler(builder: any, formatter: any) {
     return new QueryCompiler(this, builder, formatter);
+  }
+
+  // for some reason, the types file for Client has cancelQuery() with
+  // no arguments, yet the Runner only calls it with a connectionToKill.
+  // @ts-ignore
+  async cancelQuery(connectionToKill: any) {
+    connectionToKill.destroy();
   }
 
   columnBuilder(tableBuilder: any, type: any, args: any) {
@@ -135,8 +151,10 @@ export class SnowflakeDialect extends knex.Client {
   // when a connection times out or the pool is shutdown.
   async destroyRawConnection(connection): Promise<void> {
     try {
-      const end = promisify((cb) => connection.end(cb));
-      await end();
+      if (connection && connection.end) {
+        const end = promisify((cb) => connection.end(cb));
+        await end();
+      }
     } catch (err) {
       connection.__knex__disposed = err;
     } finally {
@@ -149,6 +167,7 @@ export class SnowflakeDialect extends knex.Client {
     if (connection) {
       return true;
     }
+
     return false;
   }
 
@@ -182,6 +201,13 @@ export class SnowflakeDialect extends knex.Client {
     const resp = obj.response;
     if (obj.output) return obj.output.call(runner, resp);
     if (obj.method === 'raw') return resp;
+    if (obj.method === 'first') {
+      if (resp.rows.length) {
+        return lowercaseAttrs(resp.rows[0]);
+      } else {
+        return undefined;
+      }
+    }
     if (obj.method === 'select') {
       // if (obj.method === 'first') return resp.rows[0];
       // if (obj.method === 'pluck') return map(resp.rows, obj.pluck);
@@ -208,16 +234,11 @@ export class SnowflakeDialect extends knex.Client {
   }
 
   postProcessResponse(result, queryContext) {
+    if (!result) return undefined;
+
     if (this.config.postProcessResponse) {
       return this.config.postProcessResponse(result, queryContext);
     }
-    // Snowflake returns column names in uppercase, convert to lowercase
-    // (to conform with knex, e.g. schema migrations)
-    const lowercaseAttrs = (row: any) => {
-      return fromPairs(
-        toPairs(row).map(([key, value]) => [key.toLowerCase(), value])
-      );
-    };
     if (result.rows) {
       return {
         ...result,
@@ -227,7 +248,7 @@ export class SnowflakeDialect extends knex.Client {
       return result.map(lowercaseAttrs);
     }
     return result;
-  };
+  }
 
   customWrapIdentifier(value, origImpl, queryContext) {
     if (this.config.wrapIdentifier) {
