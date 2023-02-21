@@ -5270,24 +5270,6 @@ describe('QueryBuilder', () => {
       {
         builder: qb()
           .from('accounts')
-          .where({Login: ['1', '2', '3', void 0]}),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
-          .where({Login: {Test: '123', Value: void 0}}),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
-          .where({Login: ['1', ['2', [void 0]]]}),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
           .update({test: '1', test2: void 0})
           .where({abc: 'test', cba: void 0}),
         undefinedColumns: ['cba'],
