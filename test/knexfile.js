@@ -72,6 +72,31 @@ const testConfigs = {
   }
 };
 
+const testConfigs2 = {
+  mysql: {
+    client: 'mysql',
+    connection: testConfig.mysql || {
+      port: 23306,
+      database: 'knex_test',
+      host: 'localhost',
+      user: 'testuser',
+      password: 'aNewExposedPassword',
+      charset: 'utf8',
+    },
+    pool: mysqlPool,
+    migrations,
+    seeds,
+  },
+  snowflake: {
+    client: Snowflake.SnowflakeDialect,
+    connection: process.env.SNOWFLAKE_URL,
+    debug: true,
+    pool,
+    migrations,
+    seeds,
+  }
+};
+
 // export only copy the specified dialects
 module.exports = _.reduce(
   testIntegrationDialects,
