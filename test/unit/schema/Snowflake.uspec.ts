@@ -7,6 +7,24 @@ describe('Snowflake_SchemaBuilder', () => {
   let tableSql: any;
   const equal = require('assert').equal;
 
+  // Snowflakes add column syntax sucks and is not easy to overwrite in knex.js
+  // it('create table like another with additional columns', () => {
+  //   tableSql = client
+  //       .schemaBuilder()
+  //       .createTableLike('users_like', 'users', (table) => {
+  //         table.text('add_col');
+  //         table.integer('numeric_col');
+  //       })
+  //       .toSQL();
+  //   expect(tableSql.length).toEqual(2);
+  //   expect(tableSql[0].sql).toEqual(
+  //       'create table \"USERS_LIKE\" like \"USERS\"'
+  //   );
+  //   expect(tableSql[1].sql).toEqual(
+  //       'alter table \"USERS_LIKE\" add \"ADD_COL\" text, \"NUMERIC_COL\" int'
+  //   );
+  // });
+
   it('basic create table without charset or collate', () => {
     tableSql = client
       .schemaBuilder()
@@ -210,7 +228,7 @@ describe('Snowflake_SchemaBuilder', () => {
       .renameTable('users', 'foo');
 
     equal(1, tableSql.toSQL().length);
-    expect(tableSql.toSQL()[0].sql).toEqual('rename table "USERS" to "FOO"');
+    expect(tableSql.toSQL()[0].sql).toEqual('alter table "USERS" rename to "FOO"');
   });
 
   it('test adding primary key', () => {
