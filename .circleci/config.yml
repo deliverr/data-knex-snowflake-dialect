@@ -66,8 +66,7 @@ workflows:
   version: 2
   build-test-lint-deploy:
     jobs:
-      - build:
-          context: [ node ]
+      - build
       - unit-tests:
           requires:
             - build
