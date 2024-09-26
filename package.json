@@ -54,7 +54,6 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
-    "minimatch": "^3.0.5",
     "snowflake-sdk": "~1.6.23"
   },
   "peerDependencies": {
