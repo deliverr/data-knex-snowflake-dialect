@@ -55,7 +55,7 @@
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",
     "qs": "^6.5.3",
-    "snowflake-sdk": "^1.6.23"
+    "snowflake-sdk": "~1.6.23"
   },
   "peerDependencies": {
     "knex": "0.21.21"
