@@ -60,13 +60,14 @@ jobs:
       - run:
           name: Publishing packages to npm
           command: npm publish
-      
+
 
 workflows:
   version: 2
   build-test-lint-deploy:
     jobs:
-      - build
+      - build:
+          context: [ node ]
       - unit-tests:
           requires:
             - build
@@ -81,4 +82,4 @@ workflows:
             - unit-tests
           filters:
             branches:
-              only: master          
+              only: master
