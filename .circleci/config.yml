@@ -7,7 +7,7 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:12
+    - image: cimg/node:12.22.12
 
 jobs:
   build:
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Publishing packages to npm
           command: npm publish
-      
+
 
 workflows:
   version: 2
@@ -83,6 +83,6 @@ workflows:
             - unit-tests
           filters:
             branches:
-              only: 
+              only:
                 - master
                 - 0.x
