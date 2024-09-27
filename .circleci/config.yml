@@ -80,4 +80,6 @@ workflows:
             - unit-tests
           filters:
             branches:
-              only: master,0.x
+              only:
+                - master
+                - 0.x
