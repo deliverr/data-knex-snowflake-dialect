@@ -86,3 +86,4 @@ workflows:
               only:
                 - master
                 - 0.x
+                - ryan/update-knex
