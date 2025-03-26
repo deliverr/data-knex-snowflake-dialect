@@ -240,3 +240,5 @@ export class SnowflakeDialect extends knex.Client {
   }
 
 }
+
+SnowflakeDialect.prototype.driverName = "snowflake-sdk";
