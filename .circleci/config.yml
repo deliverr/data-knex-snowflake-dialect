@@ -7,7 +7,7 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: circleci/node:12
+    - image: cimg/node:20.17.0
 
 jobs:
   build:
@@ -56,11 +56,11 @@ jobs:
           command: npm version patch -m "[skip ci] updated to v%s. published to npm." --yes
       - run:
           name: Push changes to Github
-          command: git push -u origin && git push --tags
+          command: git push -u origin HEAD && git push --tags
       - run:
           name: Publishing packages to npm
           command: npm publish
-      
+
 
 workflows:
   version: 2
@@ -83,6 +83,6 @@ workflows:
             - unit-tests
           filters:
             branches:
-              only: 
+              only:
                 - master
                 - 0.x

@@ -16,6 +16,7 @@
       "Bluebird",
       "QueryBuilder"
     ],
+    "curly": false,
     "cyclomatic-complexity": [
       true,
       12
@@ -25,6 +26,7 @@
       true,
       "never-prefix"
     ],
+    "member-access": false,
     "missing-jsdoc": false,
     "mocha-unneeded-done": true,
     "mocha-avoid-only": true,
@@ -48,6 +50,7 @@
     "no-submodule-imports": false,
     "no-unsafe-any": false,
     "object-literal-sort-keys": false,
+    "ordered-imports": false,
     "prefer-type-cast": false,
     "promise-function-async": true,
     "trailing-comma": false,

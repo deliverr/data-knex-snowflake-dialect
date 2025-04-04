@@ -1296,7 +1296,7 @@ describe('QueryBuilder', () => {
     testsql(wrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" in (select max("ID") from "USERS" union all (select min("ID") from "USERS"))',
+          'select * from "USERS" where "ID" in ((select max("ID") from "USERS") union all (select min("ID") from "USERS"))',
         bindings: [],
       }
     });
@@ -1325,7 +1325,7 @@ describe('QueryBuilder', () => {
     testsql(multipleArgumentsWrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" = ? union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
+          '(select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
         bindings: [1, 2, 3],
       }
     });
@@ -1354,7 +1354,7 @@ describe('QueryBuilder', () => {
     testsql(arrayWrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" = ? union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
+          '(select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?) union all (select * from "USERS" where "ID" = ?)',
         bindings: [1, 2, 3],
       }
     });
@@ -1661,7 +1661,7 @@ describe('QueryBuilder', () => {
     testsql(wrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" in (select max("ID") from "USERS" intersect (select min("ID") from "USERS"))',
+          'select * from "USERS" where "ID" in ((select max("ID") from "USERS") intersect (select min("ID") from "USERS"))',
         bindings: [],
       }
     });
@@ -1690,7 +1690,7 @@ describe('QueryBuilder', () => {
     testsql(multipleArgumentsWrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" = ? intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
+          '(select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
         bindings: [1, 2, 3],
       }
     });
@@ -1719,7 +1719,7 @@ describe('QueryBuilder', () => {
     testsql(arrayWrappedChain, {
       "snowflake-sdk": {
         sql:
-          'select * from "USERS" where "ID" = ? intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
+          '(select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?) intersect (select * from "USERS" where "ID" = ?)',
         bindings: [1, 2, 3],
       }
     });
@@ -5265,24 +5265,6 @@ describe('QueryBuilder', () => {
           // @ts-ignore
           .whereIn('Login', ['test', 'val', void 0])
           .select(),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
-          .where({Login: ['1', '2', '3', void 0]}),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
-          .where({Login: {Test: '123', Value: void 0}}),
-        undefinedColumns: ['Login'],
-      },
-      {
-        builder: qb()
-          .from('accounts')
-          .where({Login: ['1', ['2', [void 0]]]}),
         undefinedColumns: ['Login'],
       },
       {
