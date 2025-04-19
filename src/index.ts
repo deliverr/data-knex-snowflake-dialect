@@ -135,8 +135,8 @@ export class SnowflakeDialect extends knex.Client {
   // when a connection times out or the pool is shutdown.
   async destroyRawConnection(connection): Promise<void> {
     try {
-      const end = promisify((cb) => connection.end(cb));
-      await end();
+      const destroy = promisify((cb) => connection.destroy(cb));
+      await destroy();
     } catch (err) {
       connection.__knex__disposed = err;
     } finally {
